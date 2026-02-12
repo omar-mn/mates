@@ -13,16 +13,11 @@ def Sign_up(request):
     if serializer.is_valid():
         serializer.save()
         return Response({"account created ya 7ob , enjoy!"})
-        # if not account.objects.filter(email = serializer.data['email']).exists:
-        #     serializer.save()
-        #     return Response({"account created ya 7ob , enjoy!"})
-        # else:
-        #     return Response({"error" : "الاكونت دا موجود يسطا , دورلك ع ايميل تاني او اعمل login"})
     else:
         return Response(serializer.errors)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def User_Info(request):
-    serializer = UserInfo(request.user)
+    serializer = UserInfo(request.user , context={"request": request})
     return Response({"userData" : serializer.data})

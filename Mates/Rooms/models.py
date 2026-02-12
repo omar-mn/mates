@@ -1,5 +1,12 @@
 from django.db import models
-from Users.models import account
+from django.apps import apps
+from django.utils import timezone
+
+def getroomImageFilepath(self,filename):
+    return f'rooms/roomImages/{self.pk}/{"profileImage.png"}'
+
+def getroombannerFilepath(self,filename):
+    return f'rooms/roomBanners/{self.pk}/{"profileImage.png"}'
 
 class Room(models.Model):
     
@@ -12,12 +19,32 @@ class Room(models.Model):
 
     name                = models.CharField(max_length=50)
     description         = models.TextField(max_length=500 , blank=True , null=True , default="الاخ مكسل يضيف وصف للروم او بيجرب ف مشيها يخوياو اعتبرها عشوائية او حسب الاسم بقا )موفر عليكم وقت الكتابة اهو و بضيف من عندي , عشان انا ديفيلوبر طرش جدا.")
-    created_date        = models.DateField(auto_now_add=True)
-    user                = models.ManyToManyField(account , through='MemberShip')
-    category            = models.CharField(choices=CategoryChoices.choices , default=CategoryChoices.OTHER)
+    created_date        = models.DateTimeField(auto_now_add=True)
+    user                = models.ManyToManyField('Users.account' , through='MemberShip')
+    category            = models.CharField(choices=CategoryChoices.choices , default=CategoryChoices.OTHER , max_length=20)
+    owner               = models.ForeignKey('Users.account', on_delete=models.PROTECT, related_name="owned_rooms")
+    room_image          = models.ImageField(upload_to=getroomImageFilepath,max_length=255 , null=True , blank=True , default='main.png')
+    room_banner         = models.ImageField(upload_to=getroombannerFilepath,max_length=255 , null=True , blank=True , default='main.png')
+
+    def __str__(self):
+        return self.name
 
 
 class MemberShip(models.Model):
-    user                = models.ForeignKey(account ,on_delete=models.CASCADE)
+
+    class Role(models.TextChoices):
+        ADMIN           = 'admin'
+        OWNER           = 'owner'
+        MEMBER          = 'member'
+
+    class Meta:
+        constraints = [
+        models.UniqueConstraint(fields=["user", "room"], name="unique_room_member")
+    ]
+
+    user                = models.ForeignKey('Users.account' ,on_delete=models.CASCADE)
     room                = models.ForeignKey(Room , on_delete=models.CASCADE)
-    joinDate            = models.DateField(auto_now_add=True)
+    joinDate            = models.DateTimeField(auto_now_add=True)
+    leftDate            = models.DateTimeField(null=True, blank=True)
+    role                = models.CharField(choices=Role.choices , default=Role.MEMBER , max_length=20)
+

@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import  AbstractBaseUser , BaseUserManager
+from django.db import transaction
+from django.utils import timezone
+
 
 
 class UserManager(BaseUserManager):
@@ -13,8 +16,7 @@ class UserManager(BaseUserManager):
         user = self.model(
             email = self.normalize_email(email),
             username = username,
-        )
-        user.is_active       = True
+        ) 
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -38,8 +40,10 @@ class UserManager(BaseUserManager):
 
 #image get
 def getProfileImageFilepath(self,filename):
-    return f'profileImages/{self.pk}/{"profileImage.png"}'
+    return f'users/profileImages/{self.pk}/{"profileImage.png"}'
 
+def getProfileBannerFilepath(self,filename):
+    return f'users/profileBanner/{self.pk}/{"profileImage.png"}'
 
 class account(AbstractBaseUser):
     
@@ -50,7 +54,8 @@ class account(AbstractBaseUser):
     last_name                = models.CharField(max_length=20 , null=True , blank=True)
 
     #extra-fields
-    profileImage             = models.ImageField(upload_to=getProfileImageFilepath,max_length=255 , null=True , blank=True , default='profileImage/Serious cat.jpeg')
+    profileImage             = models.ImageField(upload_to=getProfileImageFilepath,max_length=255 , null=True , blank=True , default='main.png')
+    room_banner              = models.ImageField(upload_to=getProfileBannerFilepath,max_length=255 , null=True , blank=True , default='main.png')
     bio                      = models.CharField(max_length=500 , null=True , blank=True , default="يوزر غلبان للتطبيق الغلبان")
 
     #other-fields
@@ -76,4 +81,29 @@ class account(AbstractBaseUser):
         return self.is_admin
     
     def has_module_perms(self , app_label):
+        return True
+    
+    @transaction.atomic
+    def join_room(self, room):
+        from Rooms.models import MemberShip
+        ms, created = MemberShip.objects.select_for_update().get_or_create(
+            user=self,
+            room=room,
+            defaults={"leftDate": None}
+        )
+        if not created and ms.leftDate is not None:
+            ms.leftDate = None
+            ms.save(update_fields=["leftDate"])
+        return ms
+
+    @transaction.atomic
+    def leave_room(self, room):
+        from Rooms.models import MemberShip
+        try:
+            ms = MemberShip.objects.select_for_update().get(user=self, room=room)
+        except MemberShip.DoesNotExist:
+            return False
+        if ms.leftDate is None:
+            ms.leftDate = timezone.now()
+            ms.save(update_fields=["leftDate"])
         return True

@@ -20,3 +20,9 @@ class UserInfo(serializers.ModelSerializer):
     class Meta:
         model = account
         fields = ('username' , 'email', 'first_name' , 'last_name' , 'profileImage')
+
+
+class RoomUser(serializers.ModelSerializer):
+    class Meta:
+        model = account
+        fields = ('username' , 'profileImage')

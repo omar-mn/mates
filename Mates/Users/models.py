@@ -55,7 +55,7 @@ class account(AbstractBaseUser):
 
     #extra-fields
     profileImage             = models.ImageField(upload_to=getProfileImageFilepath,max_length=255 , null=True , blank=True , default='main.png')
-    room_banner              = models.ImageField(upload_to=getProfileBannerFilepath,max_length=255 , null=True , blank=True , default='main.png')
+    profile_banner           = models.ImageField(upload_to=getProfileBannerFilepath,max_length=255 , null=True , blank=True , default='main2.png')
     bio                      = models.CharField(max_length=500 , null=True , blank=True , default="يوزر غلبان للتطبيق الغلبان")
 
     #other-fields
@@ -64,7 +64,7 @@ class account(AbstractBaseUser):
     is_superuser             = models.BooleanField(default=False)
     is_staff                 = models.BooleanField(default=False)
     dateJoined               = models.DateTimeField(auto_now_add=True)
-    lastLogin                = models.DateTimeField( auto_now=True)
+    lastLogin                = models.DateTimeField(auto_now=True)
     hideEmail                = models.BooleanField(default=True)
     objects                  = UserManager()
 
@@ -96,14 +96,14 @@ class account(AbstractBaseUser):
             ms.save(update_fields=["leftDate"])
         return ms
 
-    @transaction.atomic
-    def leave_room(self, room):
-        from Rooms.models import MemberShip
-        try:
-            ms = MemberShip.objects.select_for_update().get(user=self, room=room)
-        except MemberShip.DoesNotExist:
-            return False
-        if ms.leftDate is None:
-            ms.leftDate = timezone.now()
-            ms.save(update_fields=["leftDate"])
-        return True
+    # @transaction.atomic
+    # def leave_room(self, room):
+    #     from Rooms.models import MemberShip
+    #     try:
+    #         ms = MemberShip.objects.select_for_update().get(user=self, room=room)
+    #     except MemberShip.DoesNotExist:
+    #         return False
+    #     if ms.leftDate is None:
+    #         ms.leftDate = timezone.now()
+    #         ms.save(update_fields=["leftDate"])
+    #     return True

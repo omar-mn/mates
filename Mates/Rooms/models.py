@@ -18,11 +18,11 @@ class Room(models.Model):
         OTHER           = 'other'
 
     name                = models.CharField(max_length=50)
-    description         = models.TextField(max_length=500 , blank=True , null=True , default="الاخ مكسل يضيف وصف للروم او بيجرب ف مشيها يخوياو اعتبرها عشوائية او حسب الاسم بقا )موفر عليكم وقت الكتابة اهو و بضيف من عندي , عشان انا ديفيلوبر طرش جدا.")
+    description         = models.TextField(max_length=500 , blank=True , null=True , default="a Mates Room, join us!!")
     created_date        = models.DateTimeField(auto_now_add=True)
     user                = models.ManyToManyField('Users.account' , through='MemberShip')
     category            = models.CharField(choices=CategoryChoices.choices , default=CategoryChoices.OTHER , max_length=20)
-    owner               = models.ForeignKey('Users.account', on_delete=models.PROTECT, related_name="owned_rooms")
+    owner               = models.ForeignKey('Users.account', on_delete=models.CASCADE, related_name="owned_rooms")
     room_image          = models.ImageField(upload_to=getroomImageFilepath,max_length=255 , null=True , blank=True , default='main.png')
     room_banner         = models.ImageField(upload_to=getroombannerFilepath,max_length=255 , null=True , blank=True , default='main.png')
 

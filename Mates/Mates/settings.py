@@ -38,11 +38,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Users',
     'django_extensions',
-    'Rooms',
     'corsheaders',
 
+    # apps
+    'Rooms',
+    'Users',
+
+    # dj-rest-auth
+    'rest_framework',
+    'rest_framework.authtoken', 
+    'dj_rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'dj_rest_auth.registration',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'Mates.urls'
@@ -111,6 +123,26 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3030',
     'http://localhost:5173',
 ]
+
+
+# AUTH
+
+REST_AUTH = {
+    'USER_DETAILS_SERIALIZER': 'Users.serializers.UserInfo',
+    'USE_JWT': True,
+    'JWT_AUTH_COOKIE': 'jwt-auth',
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'  
+ACCOUNT_EMAIL_REQUIRED = True           
+ACCOUNT_UNIQUE_EMAIL = True
+SITE_ID = 2
+
+# EMAIL
+
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators

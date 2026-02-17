@@ -6,8 +6,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/users/' , include('Users.urls')),
-    path('api/users/token/' , TokenObtainPairView.as_view()),
+    path('api/auth/' , include('Users.urls')),
     path('api/rooms/' , include('Rooms.urls')),
 ]
 

@@ -1,16 +1,19 @@
-from django.urls import path
+from django.urls import path , include
 from . import views
 
 urlpatterns = [
-    path('register/' , views.Sign_up),
-    path('info/' , views.User_Info)
+    # auth 
+    path('', include('dj_rest_auth.urls')),
+    path('registration/', include('dj_rest_auth.registration.urls')),
 ]
 
 
 """
     main apis for USERS
 
-    ==> api/users/register/     (register)
-    ==> api/users/token/        (token)
-    ==> api/users/info/         (profile)
+    ==> /auth/registration/         (new account)
+    ==> /auth/login/                (login)
+    ==> /auth/password/change/      (password)
+    ==> /auth/password/reset/       (reset pass)
+    ==> /auth/user/                 (user mod)
 """

@@ -56,12 +56,12 @@ def EditRoom(request,pk):
 def JoinRoom(request,pk):
     
     try:
-            room = Room.objects.get(pk = pk)
+        room = Room.objects.get(pk = pk)
     except Room.DoesNotExist:
         return Response({"error" : "sorry the room u r trying to join DoesNotExist"})
 
-    try:
-        Mes = MemberShip.objects.filter(user = request.user  , room = room).first()
+    Mes = MemberShip.objects.filter(user = request.user  , room = room).first() 
+    if Mes:
         if Mes.leftDate == None:
             Mes.leftDate = timezone.now()
             Mes.save()
@@ -71,7 +71,7 @@ def JoinRoom(request,pk):
             Mes.save()
             return Response({"joined":"you are now a member of this room , have fun!"})
 
-    except:
+    else:
         serializer = Join_MS( data = request.data , context={"request": request,"room" : room} )
         if serializer.is_valid():
             serializer.save()

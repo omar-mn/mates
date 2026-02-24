@@ -83,18 +83,18 @@ class account(AbstractBaseUser):
     def has_module_perms(self , app_label):
         return True
     
-    @transaction.atomic
-    def join_room(self, room):
-        from Rooms.models import MemberShip
-        ms, created = MemberShip.objects.select_for_update().get_or_create(
-            user=self,
-            room=room,
-            defaults={"leftDate": None}
-        )
-        if not created and ms.leftDate is not None:
-            ms.leftDate = None
-            ms.save(update_fields=["leftDate"])
-        return ms
+    # @transaction.atomic
+    # def join_room(self, room):
+    #     from Rooms.models import MemberShip
+    #     ms, created = MemberShip.objects.select_for_update().get_or_create(
+    #         user=self,
+    #         room=room,
+    #         defaults={"leftDate": None}
+    #     )
+    #     if not created and ms.leftDate is not None:
+    #         ms.leftDate = None
+    #         ms.save(update_fields=["leftDate"])
+    #     return ms
 
     # @transaction.atomic
     # def leave_room(self, room):

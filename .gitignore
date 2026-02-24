@@ -10,9 +10,6 @@ Mates/static/
 .MatesFront
 MatesFront/
 
-.Mates/Messages/
-Mates/Messages/
-
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # ACCOUNT_EMAIL_VERIFICATION = 'mandatory'

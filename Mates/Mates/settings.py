@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # apps
     'Rooms',
     'Users',
+    'Messages',
 
     # dj-rest-auth
     'rest_framework',

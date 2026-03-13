@@ -12,7 +12,7 @@ urlpatterns = [
 """
     main apis for ROOMS
 
-    ==> api/rooms/ '' /         (all rooms)
+    ==> api/rooms/              (all rooms)
     ==> api/rooms/create/       (add room)
     ==> api/rooms/modify/       (modify room)
     ==> api/rooms/membership/   (joinnnnnn)

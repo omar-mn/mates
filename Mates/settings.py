@@ -133,6 +133,7 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3030',
     'http://localhost:5173',
+    "https://app-5cacd864-779f-4f64-a831-73e859e46fdc.cleverapps.io",
 ]
 
 
